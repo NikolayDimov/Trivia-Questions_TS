@@ -1,0 +1,252 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;1,400&display=swap');
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+body{
+    background-color: gray;
+    font-family: Lato, sans-serif;
+}
+
+h1{
+    margin: 0 auto;
+    padding-bottom: 0.5em;
+    padding-left: 70px;
+}
+
+.header{
+    display: flex;
+    justify-content: space-between; 
+    align-items: center;
+    margin-bottom: 20px; 
+}
+
+.score {
+    border: 1px solid black;
+    border-radius: 8px;
+    background-color: #0060df;
+    color: #eee;
+    padding: 5px
+}
+
+.score p {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+#main {
+    display: flex;
+    flex-direction: column;
+    background-color: #eee;
+    width: 700px;
+    /* height: 750px; */
+    padding: 30px;
+    margin: 2em auto;
+    border-radius: 12px;
+}
+
+
+.question-options {
+    list-style: none;
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+/* Selected form */
+#selectedForm{
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.selectedCategory{
+    padding-bottom: 1em;
+}
+
+
+
+#selected_amount{
+    margin-right: 12px;
+}
+
+#selected_difficulty{
+    margin-right: 12px;
+}
+
+
+#getDataButton{
+    background-color: #0060df;
+    color: #eee;
+    border: 1px solid black;
+    border-radius: 6px;
+    padding: 4px 10px;
+    cursor: pointer;
+    margin-bottom: 10px;
+    max-width: 250px;
+    align-self: center;
+}
+
+#getDataButton:hover{
+    background-color: #6c1491;
+    box-shadow: 2px 2px 2px -3px #615757;
+}
+
+/* Category / Difficulty / Question */
+.question-data .category,
+.question-data .difficulty,
+.question-data .question {
+    color: #0060df;  
+}
+
+.question-data .question {
+    padding-bottom: 2em;
+}
+
+#category_span,
+#difficulty_span,
+#question_span{
+    color: black;
+}
+
+
+
+/* Options-answers */
+.question-options li{
+    border: 1px solid black;
+    border-radius: 6px;
+    margin: 1em 2em;
+    text-align: center;
+    padding: 10px;
+    background-color: #0060df;;
+    color: #eee;
+    cursor: pointer;
+}
+
+.question-options li:hover {
+    background-color: #6c1491;
+    box-shadow: 2px 2px 2px -3px #615757;
+}
+
+.question-options .selected {
+    background-color: #6c1491;
+}
+
+
+  
+
+.buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+    margin-bottom: 20px;
+}
+
+#next-question,
+#play-again {
+    padding-top: 8px;
+    padding-bottom: 8px;
+    cursor: pointer;
+    border-radius: 6px;
+}
+
+#result {
+    padding-bottom: 1em;
+}
+
+
+
+
+/* Font Awsome icon */
+.fa-times {
+    color: red;
+    margin-right: 5px;
+}
+
+.fa-check {
+    color: green;
+    margin-right: 5px;
+}
+
+.fa-face-grin-stars,
+.fa-face-smile-wink,
+.fa-face-sad-tear {
+    color: rgb(230, 198, 16);
+    font-size: 22px;
+}
+
+#downloadReasult{
+    padding: 2px;
+}
+
+
+
+
+/* Fun Facts Section */
+.funFacts {
+    margin-bottom: 3em;
+    text-align: center;
+    background-color: #eee;
+    width: 700px;
+    margin: 0 auto;
+    border-radius: 12px;
+    font-weight: bold;
+    padding: 8px;
+}
+
+.fun-fatcs-p {
+    font-weight: lighter;
+    padding-top: 4px;
+    font-style: italic;
+}
+
+
+@media screen and (max-width: 750px) {
+    #main {
+        width: 500px;
+    }
+
+    .funFacts{
+        width: 500px;
+    }
+
+    #selectedForm {
+        gap: 0.3em
+    }
+
+}
+
+.clarification {
+    font-size: 12px;
+    font-style: italic;
+}
+
+
+@media screen and (max-width: 550px) {
+    #main {
+        width: 350px;
+    }
+
+    .funFacts{
+        width: 350px;
+    }
+
+    .buttons {
+        max-width: 200px;
+        gap: 0.4em;
+        margin-bottom: 10px;
+        margin: 0 auto;
+    }
+
+    #next-question,
+    #play-again {
+    padding: 4px 20px;
+    cursor: pointer;
+    border-radius: 6px;
+    }
+
+    .header h1 {
+        font-size: 26px;
+    }
+}
