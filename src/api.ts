@@ -161,7 +161,7 @@ function loadQuestions() {
 
         // Check if there are more questions in the local storage
         if (currentAskedCount < currentTotalQuestion) {
-            showQuestion(questions[currentAskedCount]);
+            showQuestion(questions.result[currentAskedCount]);
         } else {
             // If no more questions in local storage, fetch new questions
             getData();
@@ -372,7 +372,7 @@ const worker = new Worker("./worker.js", { type: "module" });
 (downloadResults as ButtonElement).addEventListener("click", () => {
     const selectAmount = (JSON.parse(localStorage.getItem("selectAmount")) as string) ?? 10;
     const wrongAnswers = JSON.parse(localStorage.getItem("wrongAnswers")) ?? [];
-    const selectedCategory = JSON.parse(localStorage.getItem("selectedCategory")) ?? 10;
+    const selectedCategory = JSON.parse(localStorage.getItem("selectedCategory"));
     const selectDifficulty = JSON.parse(localStorage.getItem("selectDifficulty"));
     const currentCorrectScore = JSON.parse(localStorage.getItem("currentCorrectScore"));
 
