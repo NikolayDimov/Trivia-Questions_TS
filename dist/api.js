@@ -86,7 +86,7 @@ function fetchTriviaData(apiEndpoint) {
 // Store questions in localStorage
 function handleApiResponse(data) {
     // console.log(data.results);
-    localStorage.setItem("questions", JSON.stringify({ results: data }));
+    localStorage.setItem("questions", JSON.stringify(data));
     localStorage.setItem("selectAmount", JSON.stringify(selectAmount));
     localStorage.setItem("selectDifficulty", JSON.stringify(selectDifficulty));
     localStorage.setItem("selectedCategory", JSON.stringify(selectedCategory));
@@ -152,7 +152,8 @@ function loadQuestions() {
         const questions = JSON.parse(storedQuestions);
         // Check if there are more questions in the local storage
         if (currentAskedCount < currentTotalQuestion) {
-            showQuestion(questions[currentAskedCount]);
+            console.log("log", questions.results[currentAskedCount]);
+            showQuestion(questions.results[currentAskedCount]);
         }
         else {
             // If no more questions in local storage, fetch new questions
@@ -166,6 +167,9 @@ function loadQuestions() {
 }
 // Show question options on the screen ------------------------------------------------------------------- START
 function showQuestion(data) {
+    console.log("data", data);
+    if (!data)
+        return;
     currentCorrectAnswer = `${data.correct_answer}`;
     let incorrectAnswer = data.incorrect_answers;
     let optionsList = [...incorrectAnswer, currentCorrectAnswer];
