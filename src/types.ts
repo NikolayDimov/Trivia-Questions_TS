@@ -10,7 +10,3 @@ interface FunData {
     funFactElement: string;
     fact: string;
 }
-
-interface FunDataArray {
-    result: Array<FunData>;
-}

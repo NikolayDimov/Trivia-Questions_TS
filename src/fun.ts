@@ -19,7 +19,7 @@ async function fetchFunData() {
             throw new Error(`HTTP error! Status: ${newApiResponse.status}`);
         }
 
-        const funData: FunDataArray = await newApiResponse.json();
+        const funData: FunData[] = await newApiResponse.json();
 
         // console.log(funData);
         return funData;
@@ -28,9 +28,9 @@ async function fetchFunData() {
     }
 }
 
-function getRandomFunFact(funData: FunDataArray) {
-    const randomIndex = Math.floor(Math.random() * funData.result.length);
-    return funData.result[randomIndex].fact;
+function getRandomFunFact(funData: FunData[]) {
+    const randomIndex = Math.floor(Math.random() * funData.length);
+    return funData[randomIndex].fact;
 }
 
 export { fetchFunData, getRandomFunFact };

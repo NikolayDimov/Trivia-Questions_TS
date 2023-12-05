@@ -35,7 +35,7 @@ function fetchFunData() {
     });
 }
 function getRandomFunFact(funData) {
-    const randomIndex = Math.floor(Math.random() * funData.result.length);
-    return funData.result[randomIndex].fact;
+    const randomIndex = Math.floor(Math.random() * funData.length);
+    return funData[randomIndex].fact;
 }
 export { fetchFunData, getRandomFunFact };

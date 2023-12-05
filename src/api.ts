@@ -154,7 +154,7 @@ function eventListeners() {
 }
 
 // FunFacts random display function
-function displayRandomFunFact(funData: FunDataArray) {
+function displayRandomFunFact(funData: FunData[]) {
     const funFactElement = document.querySelector(".fun-fatcs-p");
     const randomFunFact = getRandomFunFact(funData);
     (funFactElement as InputElement).textContent = `"${randomFunFact}"`;
