@@ -166,11 +166,11 @@ function loadQuestions() {
 
     if (storedQuestions) {
         // console.log("Questions found in local storage");
-        const questions: QuestionArray = JSON.parse(storedQuestions);
+        const questions: SingleQuestion[] = JSON.parse(storedQuestions);
 
         // Check if there are more questions in the local storage
         if (currentAskedCount < currentTotalQuestion) {
-            showQuestion(questions.result[currentAskedCount]);
+            showQuestion(questions[currentAskedCount]);
         } else {
             // If no more questions in local storage, fetch new questions
             getData();

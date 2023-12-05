@@ -1,13 +1,9 @@
 interface SingleQuestion {
     correct_answer: string;
-    incorrect_answers: string;
+    incorrect_answers: Array<string>;
     category: string;
     difficulty: string;
     question: string;
-}
-
-interface QuestionArray {
-    result: Array<SingleQuestion>;
 }
 
 interface FunData {

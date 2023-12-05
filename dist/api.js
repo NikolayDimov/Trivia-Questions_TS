@@ -1,4 +1,3 @@
-"use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -8,9 +7,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.getData = void 0;
-const fun_js_1 = require("./fun.js");
+import { fetchFunData, getRandomFunFact } from "./fun.js";
 const apiUrl = "https://opentdb.com/api.php";
 let selectAmount = 0;
 let selectDifficulty = "";
@@ -37,7 +34,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 // * Fetching data from Trivia * ------------------------------------------------------------------- START
 // --- Main function ---
-function getData() {
+export function getData() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             hideDownloadResultButton(); // Download result button hede, display wnhen qiuz end
@@ -56,7 +53,6 @@ function getData() {
         }
     });
 }
-exports.getData = getData;
 // --- Main function ---
 // -- Functions helpers --
 // Download result button hede, display wnhen qiuz end
@@ -114,7 +110,7 @@ function updateTotalQuestionCount() {
 // Fetch Fun Facts
 // Fetch Fun Facts
 function setupQuizWithFunFacts() {
-    const funDataPromise = (0, fun_js_1.fetchFunData)();
+    const funDataPromise = fetchFunData();
     funDataPromise.then((funData) => {
         if (funData) {
             loadQuestions();
@@ -145,7 +141,7 @@ function eventListeners() {
 // FunFacts random display function
 function displayRandomFunFact(funData) {
     const funFactElement = document.querySelector(".fun-fatcs-p");
-    const randomFunFact = (0, fun_js_1.getRandomFunFact)(funData);
+    const randomFunFact = getRandomFunFact(funData);
     funFactElement.textContent = `"${randomFunFact}"`;
 }
 // Load question from localStorage
@@ -156,7 +152,7 @@ function loadQuestions() {
         const questions = JSON.parse(storedQuestions);
         // Check if there are more questions in the local storage
         if (currentAskedCount < currentTotalQuestion) {
-            showQuestion(questions.result[currentAskedCount]);
+            showQuestion(questions[currentAskedCount]);
         }
         else {
             // If no more questions in local storage, fetch new questions
@@ -302,7 +298,7 @@ function restartQuiz() {
     setCount();
     getData();
     // Fetch new fun facts
-    (0, fun_js_1.fetchFunData)()
+    fetchFunData()
         .then((funData) => {
         if (funData) {
             // Update the stored fun data

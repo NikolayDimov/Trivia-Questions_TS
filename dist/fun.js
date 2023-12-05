@@ -1,4 +1,3 @@
-"use strict";
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -8,8 +7,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.getRandomFunFact = exports.fetchFunData = void 0;
 const limit = 30;
 const api_url = `https://api.api-ninjas.com/v1/facts?limit=${limit}`;
 const headers = {
@@ -37,9 +34,8 @@ function fetchFunData() {
         }
     });
 }
-exports.fetchFunData = fetchFunData;
 function getRandomFunFact(funData) {
     const randomIndex = Math.floor(Math.random() * funData.result.length);
     return funData.result[randomIndex].fact;
 }
-exports.getRandomFunFact = getRandomFunFact;
+export { fetchFunData, getRandomFunFact };
