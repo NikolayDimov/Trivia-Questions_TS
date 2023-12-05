@@ -30,7 +30,9 @@ document.getElementById("getDataButton").addEventListener("click", getData);
 document.addEventListener("DOMContentLoaded", () => {
     getData();
     eventListeners();
-    totalQuestion.textContent = String(currentTotalQuestion); // I add here String()
+    if (totalQuestion) {
+        totalQuestion.textContent = String(currentTotalQuestion); // I add here String()
+    }
 });
 // * Fetching data from Trivia * ------------------------------------------------------------------- START
 // --- Main function ---
@@ -57,13 +59,22 @@ export function getData() {
 // -- Functions helpers --
 // Download result button hede, display wnhen qiuz end
 function hideDownloadResultButton() {
-    document.getElementById("downloadReasult").style.display = "none";
+    if (downloadResults) {
+        downloadResults.style.display = "none";
+    }
 }
 // Quiz parameters display on screen
 function setQuizParameters() {
-    selectAmount = Number(document.getElementById("selected_amount").value);
-    selectDifficulty = document.getElementById("selected_difficulty").value;
-    selectedCategory = document.getElementById("selected_category").value;
+    const selectAmountElement = document.getElementById("selected_amount");
+    selectAmount = Number(selectAmountElement === null || selectAmountElement === void 0 ? void 0 : selectAmountElement.value);
+    const selectDifficultyElement = document.getElementById("selected_difficulty");
+    if (selectDifficultyElement) {
+        selectDifficulty = selectDifficultyElement.value;
+    }
+    const selectedCategoryElement = document.getElementById("selected_category");
+    if (selectedCategoryElement) {
+        selectedCategory = selectedCategoryElement.value;
+    }
 }
 // Build Api Endpoints
 function buildApiEndpoint() {
@@ -105,7 +116,9 @@ function resetQuestionCountAndScore() {
 }
 // Update the total question count
 function updateTotalQuestionCount() {
-    totalQuestion.textContent = String(currentTotalQuestion);
+    if (totalQuestion) {
+        totalQuestion.textContent = String(currentTotalQuestion);
+    }
 }
 // Fetch Fun Facts
 // Fetch Fun Facts
@@ -116,7 +129,8 @@ function setupQuizWithFunFacts() {
             loadQuestions();
             displayRandomFunFact(funData);
             const storedFunData = funData;
-            document.getElementById("next-question").addEventListener("click", () => {
+            const nextQuestionElelemnt = document.getElementById("next-question");
+            nextQuestionElelemnt === null || nextQuestionElelemnt === void 0 ? void 0 : nextQuestionElelemnt.addEventListener("click", () => {
                 displayRandomFunFact(storedFunData);
             });
         }
@@ -128,21 +142,31 @@ function setupQuizWithFunFacts() {
 }
 // Fixing bug with generate new quiz and Next btn and Play Again btn
 function fixBugWithButtonsDisplay() {
-    checkBtn.style.display = "block";
-    playAgainBtn.style.display = "none";
+    if (checkBtn) {
+        checkBtn.style.display = "block";
+    }
+    if (playAgainBtn) {
+        playAgainBtn.style.display = "none";
+    }
 }
 // -- Functions helpers --
 // * Fetching data from Trivia * ------------------------------------------------------------------- END
 // Event listeners to Check Button and Play Again Btn
 function eventListeners() {
-    checkBtn.addEventListener("click", checkAnswer);
-    playAgainBtn.addEventListener("click", restartQuiz);
+    if (checkBtn) {
+        checkBtn.addEventListener("click", checkAnswer);
+    }
+    if (playAgainBtn) {
+        playAgainBtn.addEventListener("click", restartQuiz);
+    }
 }
 // FunFacts random display function
 function displayRandomFunFact(funData) {
     const funFactElement = document.querySelector(".fun-fatcs-p");
     const randomFunFact = getRandomFunFact(funData);
-    funFactElement.textContent = `"${randomFunFact}"`;
+    if (funFactElement) {
+        funFactElement.textContent = `"${randomFunFact}"`;
+    }
 }
 // Load question from localStorage
 function loadQuestions() {
@@ -152,7 +176,7 @@ function loadQuestions() {
         const questions = JSON.parse(storedQuestions);
         // Check if there are more questions in the local storage
         if (currentAskedCount < currentTotalQuestion) {
-            console.log("log", questions.results[currentAskedCount]);
+            // console.log("log", questions.results[currentAskedCount]);
             showQuestion(questions.results[currentAskedCount]);
         }
         else {
@@ -167,24 +191,36 @@ function loadQuestions() {
 }
 // Show question options on the screen ------------------------------------------------------------------- START
 function showQuestion(data) {
-    console.log("data", data);
-    if (!data)
+    if (data) {
+        currentCorrectAnswer = `${data.correct_answer}`;
+        let incorrectAnswer = data.incorrect_answers;
+        let optionsList = [...incorrectAnswer, currentCorrectAnswer];
+        shuffleArray(optionsList);
+        if (category) {
+            category.textContent = `${data.category}`;
+        }
+        if (difficulty) {
+            difficulty.textContent = `${data.difficulty}`;
+        }
+        if (question) {
+            question.textContent = `${data.question}`;
+        }
+        // Clear existing options
+        if (questionOptions) {
+            questionOptions.innerHTML = "";
+        }
+        // Create and append new options/answers
+        optionsList.forEach((option, index) => {
+            const li = document.createElement("li");
+            li.textContent = `${index + 1}. ${option}`;
+            if (questionOptions) {
+                questionOptions.appendChild(li);
+            }
+        });
+    }
+    else {
         return;
-    currentCorrectAnswer = `${data.correct_answer}`;
-    let incorrectAnswer = data.incorrect_answers;
-    let optionsList = [...incorrectAnswer, currentCorrectAnswer];
-    shuffleArray(optionsList);
-    category.textContent = `${data.category}`;
-    difficulty.textContent = `${data.difficulty}`;
-    question.textContent = `${data.question}`;
-    // Clear existing options
-    questionOptions.innerHTML = "";
-    // Create and append new options/answers
-    optionsList.forEach((option, index) => {
-        const li = document.createElement("li");
-        li.textContent = `${index + 1}. ${option}`;
-        questionOptions.appendChild(li);
-    });
+    }
     selectAnswers();
 }
 // Helper function to shuffle an array with answers
@@ -194,8 +230,8 @@ function shuffleArray(array) {
 // Show question options on the screen ------------------------------------------------------------------- END
 // Adding class="selected" for the chosen element
 function selectAnswers() {
-    const answerElements = questionOptions.querySelectorAll("li");
-    answerElements.forEach((answerElement) => {
+    const answerElements = questionOptions === null || questionOptions === void 0 ? void 0 : questionOptions.querySelectorAll("li");
+    answerElements === null || answerElements === void 0 ? void 0 : answerElements.forEach((answerElement) => {
         answerElement.addEventListener("click", () => {
             // Remove the "selected" class from all previously selected options
             answerElements.forEach((element) => {
@@ -209,9 +245,11 @@ function selectAnswers() {
 // Answer checking
 function checkAnswer() {
     var _a;
-    const selectedOption = questionOptions.querySelector("li.selected");
+    const selectedOption = questionOptions === null || questionOptions === void 0 ? void 0 : questionOptions.querySelector("li.selected");
     if (selectedOption) {
-        checkBtn.disabled = true; // Disable the button to prevent multiple clicks
+        if (checkBtn) {
+            checkBtn.disabled = true; // Disable the button to prevent multiple clicks
+        }
         const selectedAnswer = (_a = selectedOption === null || selectedOption === void 0 ? void 0 : selectedOption.textContent) === null || _a === void 0 ? void 0 : _a.replace(/^\d+\.\s/, "").trim();
         // console.log("Selected Answer:", selectedAnswer);
         // console.log("Correct Answer:", currentCorrectAnswer);
@@ -225,7 +263,9 @@ function checkAnswer() {
         currentAskedCount++;
         checkCount();
         // Re-enable the button
-        checkBtn.disabled = false;
+        if (checkBtn) {
+            checkBtn.disabled = false;
+        }
     }
     else {
         showResult(false, `Please select an option!`);
@@ -251,7 +291,9 @@ function checkCount() {
 // --- Main function ---
 // -- Functions helpers --
 function showCheckButton() {
-    checkBtn.style.display = "block";
+    if (checkBtn) {
+        checkBtn.style.display = "block";
+    }
 }
 function isQuizComplete() {
     return currentAskedCount === currentTotalQuestion;
@@ -280,9 +322,15 @@ function storeCurrentScore() {
     localStorage.setItem("wrongAnswers", JSON.stringify(wrongAnswers));
 }
 function showQuizOutcomeButtons() {
-    playAgainBtn.style.display = "block";
-    checkBtn.style.display = "none";
-    downloadResults.style.display = "block";
+    if (playAgainBtn) {
+        playAgainBtn.style.display = "block";
+    }
+    if (checkBtn) {
+        checkBtn.style.display = "none";
+    }
+    if (downloadResults) {
+        downloadResults.style.display = "block";
+    }
 }
 // Function helpers on handleQuizCompletion
 function loadNextQuestion() {
@@ -292,7 +340,9 @@ function loadNextQuestion() {
 // * Check count and end quiz if needed * -------------------------------------------------------------------  END
 // Set count in the UI
 function setCount() {
-    totalQuestion.textContent = `${currentAskedCount}/${currentTotalQuestion}`;
+    if (totalQuestion) {
+        totalQuestion.textContent = `${currentAskedCount}/${currentTotalQuestion}`;
+    }
 }
 // * Restart the quiz * ------------------------------------------------------------------- START
 // --- Main function ---
@@ -324,12 +374,18 @@ function restartQuiz() {
 // -- Functions helpers --
 function resetQuizState() {
     currentCorrectScore = currentAskedCount = 0;
-    playAgainBtn.style.display = "none";
-    checkBtn.style.display = "block";
-    checkBtn.disabled = false;
+    if (playAgainBtn) {
+        playAgainBtn.style.display = "none";
+    }
+    if (checkBtn) {
+        checkBtn.style.display = "block";
+        checkBtn.disabled = false;
+    }
 }
 function displayButtonsAfterRestart() {
-    document.getElementById("downloadReasult").style.display = "none";
+    if (downloadResults) {
+        downloadResults.style.display = "none";
+    }
 }
 function clearLocalStorage() {
     const keysToClear = ["question", "selectAmount", "selectDifficulty", "selectedCategory", "currentCorrectScore", "wrongAnswers"];
@@ -341,7 +397,7 @@ function clearLocalStorage() {
 // * Restart the quiz * ------------------------------------------------------------------- END
 // * Download function * ------------------------------------------------------------------- START
 const worker = new Worker("./worker.js", { type: "module" });
-downloadResults.addEventListener("click", () => {
+downloadResults === null || downloadResults === void 0 ? void 0 : downloadResults.addEventListener("click", () => {
     const selectAmountRaw = localStorage.getItem("selectAmount");
     const wrongAnswersRaw = localStorage.getItem("wrongAnswers");
     const selectedCategoryRaw = localStorage.getItem("selectedCategory");

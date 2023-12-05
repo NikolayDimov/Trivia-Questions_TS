@@ -1,9 +1,9 @@
 import { fetchFunData, getRandomFunFact } from "./fun.js";
 
-type HtmlElement = HTMLElement;
-type ButtonElement = HTMLButtonElement;
-type OptionsElement = HTMLOptionElement;
-type InputElement = HTMLInputElement;
+type HtmlElement = HTMLElement | null;
+type ButtonElement = HTMLButtonElement | null;
+type OptionsElement = HTMLOptionElement | null;
+type InputElement = HTMLInputElement | null;
 
 const apiUrl = "https://opentdb.com/api.php";
 let selectAmount: number = 0;
@@ -20,8 +20,7 @@ const checkBtn = document.getElementById("next-question") as ButtonElement;
 const playAgainBtn = document.getElementById("play-again") as ButtonElement;
 
 const result = document.getElementById("result") as HTMLElement;
-
-const downloadResults = document.getElementById("downloadReasult");
+const downloadResults = document.getElementById("downloadReasult") as ButtonElement;
 
 let currentCorrectAnswer: string = "";
 let currentCorrectScore: number = 0;
@@ -34,7 +33,9 @@ let currentTotalQuestion: number = 0;
 document.addEventListener("DOMContentLoaded", () => {
     getData();
     eventListeners();
-    totalQuestion.textContent = String(currentTotalQuestion); // I add here String()
+    if (totalQuestion) {
+        totalQuestion.textContent = String(currentTotalQuestion); // I add here String()
+    }
 });
 
 // * Fetching data from Trivia * ------------------------------------------------------------------- START
@@ -43,7 +44,7 @@ export async function getData() {
     try {
         hideDownloadResultButton(); // Download result button hede, display wnhen qiuz end
         setQuizParameters(); // Quiz parameters display on screen
-        const apiEndpoint: string = buildApiEndpoint(); // Build Api Endpoints
+        const apiEndpoint = buildApiEndpoint(); // Build Api Endpoints
         const response = await fetchTriviaData(apiEndpoint); // Fetching data from Trivia App
         handleApiResponse(response); // Store questions in localStorage
         clearOptionsAndResult(); // Clear existing options and result
@@ -60,15 +61,27 @@ export async function getData() {
 // -- Functions helpers --
 // Download result button hede, display wnhen qiuz end
 function hideDownloadResultButton() {
-    (document.getElementById("downloadReasult") as ButtonElement).style.display = "none";
+    if (downloadResults) {
+        downloadResults.style.display = "none";
+    }
 }
 
 // Quiz parameters display on screen
 
 function setQuizParameters() {
-    selectAmount = Number((document.getElementById("selected_amount") as OptionsElement).value);
-    selectDifficulty = (document.getElementById("selected_difficulty") as OptionsElement).value;
-    selectedCategory = (document.getElementById("selected_category") as OptionsElement).value;
+    const selectAmountElement = document.getElementById("selected_amount") as OptionsElement;
+    selectAmount = Number(selectAmountElement?.value);
+
+    const selectDifficultyElement = document.getElementById("selected_difficulty") as OptionsElement;
+
+    if (selectDifficultyElement) {
+        selectDifficulty = selectDifficultyElement.value;
+    }
+    const selectedCategoryElement = document.getElementById("selected_category") as OptionsElement;
+
+    if (selectedCategoryElement) {
+        selectedCategory = selectedCategoryElement.value;
+    }
 }
 
 // Build Api Endpoints
@@ -114,7 +127,9 @@ function resetQuestionCountAndScore() {
 
 // Update the total question count
 function updateTotalQuestionCount() {
-    totalQuestion.textContent = String(currentTotalQuestion);
+    if (totalQuestion) {
+        totalQuestion.textContent = String(currentTotalQuestion);
+    }
 }
 
 // Fetch Fun Facts
@@ -129,7 +144,8 @@ function setupQuizWithFunFacts() {
 
             const storedFunData = funData;
 
-            (document.getElementById("next-question") as ButtonElement).addEventListener("click", () => {
+            const nextQuestionElelemnt = document.getElementById("next-question") as ButtonElement;
+            nextQuestionElelemnt?.addEventListener("click", () => {
                 displayRandomFunFact(storedFunData);
             });
         } else {
@@ -141,23 +157,33 @@ function setupQuizWithFunFacts() {
 
 // Fixing bug with generate new quiz and Next btn and Play Again btn
 function fixBugWithButtonsDisplay() {
-    checkBtn.style.display = "block";
-    playAgainBtn.style.display = "none";
+    if (checkBtn) {
+        checkBtn.style.display = "block";
+    }
+    if (playAgainBtn) {
+        playAgainBtn.style.display = "none";
+    }
 }
 // -- Functions helpers --
 // * Fetching data from Trivia * ------------------------------------------------------------------- END
 
 // Event listeners to Check Button and Play Again Btn
 function eventListeners() {
-    checkBtn.addEventListener("click", checkAnswer);
-    playAgainBtn.addEventListener("click", restartQuiz);
+    if (checkBtn) {
+        checkBtn.addEventListener("click", checkAnswer);
+    }
+    if (playAgainBtn) {
+        playAgainBtn.addEventListener("click", restartQuiz);
+    }
 }
 
 // FunFacts random display function
 function displayRandomFunFact(funData: FunData[]) {
-    const funFactElement = document.querySelector(".fun-fatcs-p");
+    const funFactElement = document.querySelector(".fun-fatcs-p") as InputElement;
     const randomFunFact = getRandomFunFact(funData);
-    (funFactElement as InputElement).textContent = `"${randomFunFact}"`;
+    if (funFactElement) {
+        funFactElement.textContent = `"${randomFunFact}"`;
+    }
 }
 
 // Load question from localStorage
@@ -170,7 +196,7 @@ function loadQuestions() {
 
         // Check if there are more questions in the local storage
         if (currentAskedCount < currentTotalQuestion) {
-            console.log("log", questions.results[currentAskedCount]);
+            // console.log("log", questions.results[currentAskedCount]);
 
             showQuestion(questions.results[currentAskedCount]);
         } else {
@@ -185,27 +211,38 @@ function loadQuestions() {
 
 // Show question options on the screen ------------------------------------------------------------------- START
 function showQuestion(data: SingleQuestion | undefined) {
-    console.log("data", data);
-    if (!data) return;
+    if (data) {
+        currentCorrectAnswer = `${data.correct_answer}`;
+        let incorrectAnswer = data.incorrect_answers;
+        let optionsList = [...incorrectAnswer, currentCorrectAnswer];
+        shuffleArray(optionsList);
 
-    currentCorrectAnswer = `${data.correct_answer}`;
-    let incorrectAnswer = data.incorrect_answers;
-    let optionsList = [...incorrectAnswer, currentCorrectAnswer];
-    shuffleArray(optionsList);
+        if (category) {
+            category.textContent = `${data.category}`;
+        }
+        if (difficulty) {
+            difficulty.textContent = `${data.difficulty}`;
+        }
+        if (question) {
+            question.textContent = `${data.question}`;
+        }
 
-    category.textContent = `${data.category}`;
-    difficulty.textContent = `${data.difficulty}`;
-    question.textContent = `${data.question}`;
+        // Clear existing options
+        if (questionOptions) {
+            questionOptions.innerHTML = "";
+        }
 
-    // Clear existing options
-    questionOptions.innerHTML = "";
-
-    // Create and append new options/answers
-    optionsList.forEach((option, index) => {
-        const li = document.createElement("li");
-        li.textContent = `${index + 1}. ${option}`;
-        questionOptions.appendChild(li);
-    });
+        // Create and append new options/answers
+        optionsList.forEach((option, index) => {
+            const li = document.createElement("li");
+            li.textContent = `${index + 1}. ${option}`;
+            if (questionOptions) {
+                questionOptions.appendChild(li);
+            }
+        });
+    } else {
+        return;
+    }
 
     selectAnswers();
 }
@@ -218,9 +255,9 @@ function shuffleArray(array: string[]) {
 
 // Adding class="selected" for the chosen element
 function selectAnswers() {
-    const answerElements = questionOptions.querySelectorAll("li");
+    const answerElements = questionOptions?.querySelectorAll("li");
 
-    answerElements.forEach((answerElement) => {
+    answerElements?.forEach((answerElement) => {
         answerElement.addEventListener("click", () => {
             // Remove the "selected" class from all previously selected options
             answerElements.forEach((element) => {
@@ -235,10 +272,12 @@ function selectAnswers() {
 
 // Answer checking
 function checkAnswer() {
-    const selectedOption = questionOptions.querySelector("li.selected");
+    const selectedOption = questionOptions?.querySelector("li.selected");
 
     if (selectedOption) {
-        checkBtn.disabled = true; // Disable the button to prevent multiple clicks
+        if (checkBtn) {
+            checkBtn.disabled = true; // Disable the button to prevent multiple clicks
+        }
         const selectedAnswer = selectedOption?.textContent?.replace(/^\d+\.\s/, "").trim();
 
         // console.log("Selected Answer:", selectedAnswer);
@@ -254,7 +293,9 @@ function checkAnswer() {
         currentAskedCount++;
         checkCount();
         // Re-enable the button
-        checkBtn.disabled = false;
+        if (checkBtn) {
+            checkBtn.disabled = false;
+        }
     } else {
         showResult(false, `Please select an option!`);
     }
@@ -282,7 +323,9 @@ function checkCount() {
 
 // -- Functions helpers --
 function showCheckButton() {
-    checkBtn.style.display = "block";
+    if (checkBtn) {
+        checkBtn.style.display = "block";
+    }
 }
 
 function isQuizComplete() {
@@ -315,9 +358,15 @@ function storeCurrentScore() {
 }
 
 function showQuizOutcomeButtons() {
-    playAgainBtn.style.display = "block";
-    checkBtn.style.display = "none";
-    (downloadResults as ButtonElement).style.display = "block";
+    if (playAgainBtn) {
+        playAgainBtn.style.display = "block";
+    }
+    if (checkBtn) {
+        checkBtn.style.display = "none";
+    }
+    if (downloadResults) {
+        downloadResults.style.display = "block";
+    }
 }
 // Function helpers on handleQuizCompletion
 
@@ -329,7 +378,9 @@ function loadNextQuestion() {
 
 // Set count in the UI
 function setCount() {
-    totalQuestion.textContent = `${currentAskedCount}/${currentTotalQuestion}`;
+    if (totalQuestion) {
+        totalQuestion.textContent = `${currentAskedCount}/${currentTotalQuestion}`;
+    }
 }
 
 // * Restart the quiz * ------------------------------------------------------------------- START
@@ -366,13 +417,19 @@ function restartQuiz() {
 // -- Functions helpers --
 function resetQuizState() {
     currentCorrectScore = currentAskedCount = 0;
-    playAgainBtn.style.display = "none";
-    checkBtn.style.display = "block";
-    checkBtn.disabled = false;
+    if (playAgainBtn) {
+        playAgainBtn.style.display = "none";
+    }
+    if (checkBtn) {
+        checkBtn.style.display = "block";
+        checkBtn.disabled = false;
+    }
 }
 
 function displayButtonsAfterRestart() {
-    (document.getElementById("downloadReasult") as ButtonElement).style.display = "none";
+    if (downloadResults) {
+        downloadResults.style.display = "none";
+    }
 }
 
 function clearLocalStorage() {
@@ -388,7 +445,7 @@ function clearLocalStorage() {
 // * Download function * ------------------------------------------------------------------- START
 const worker = new Worker("./worker.js", { type: "module" });
 
-(downloadResults as ButtonElement).addEventListener("click", () => {
+downloadResults?.addEventListener("click", () => {
     const selectAmountRaw = localStorage.getItem("selectAmount");
     const wrongAnswersRaw = localStorage.getItem("wrongAnswers");
     const selectedCategoryRaw = localStorage.getItem("selectedCategory");
