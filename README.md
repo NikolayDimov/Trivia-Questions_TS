@@ -25,3 +25,7 @@ Welcome to the Trivia Question App! This application provides a fun and engaging
     git clone https://github.com/NikolayDimov/Trivia-Questions.git
     cd Trivia-Questions
     ```
+
+## Screenshot
+
+![Trivia Quiz](./assets/trivia.png)
